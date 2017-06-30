@@ -11,10 +11,11 @@ dataset = data_loader.load_data()
 dataset_size = len(data_loader)
 print('#training images = %d' % dataset_size)
 
+logger = Logger(opt)
+
 model = create_model(opt)
 
 total_steps = 0
-
 for epoch in range(1, opt.niter + opt.niter_decay + 1):
     epoch_start_time = time.time()
 
@@ -30,7 +31,7 @@ for epoch in range(1, opt.niter + opt.niter_decay + 1):
         if total_steps % opt.print_freq == 0:
             errors = model.get_current_errors()
             t = (time.time() - iter_start_time) / opt.batchSize
-            Logger.print_current_errors(epoch, epoch_iter, errors, t)
+            logger.print_current_errors(epoch, epoch_iter, errors, t)
 
         # save the latest model
         if total_steps % opt.save_latest_freq == 0:

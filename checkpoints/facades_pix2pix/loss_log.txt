@@ -799,3 +799,6 @@
 (epoch: 200, iters: 40000, time: 0.078) G_GAN: 3.605 G_L1: 28.744 D_real: 0.029 D_fake: 0.057 
 (epoch: 200, iters: 40100, time: 0.079) G_GAN: 3.782 G_L1: 17.938 D_real: 0.100 D_fake: 0.084 
 (epoch: 200, iters: 40200, time: 0.079) G_GAN: 5.508 G_L1: 21.246 D_real: 0.088 D_fake: 0.015 
+================ Training Loss (Fri Jun 30 15:51:45 2017) ================
+(epoch: 1, iters: 100, time: 0.120) G_GAN: 1.959 G_L1: 23.015 D_real: 0.555 D_fake: 0.375 
+(epoch: 1, iters: 200, time: 0.121) G_GAN: 2.395 G_L1: 34.587 D_real: 0.205 D_fake: 0.128 
