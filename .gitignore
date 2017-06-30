@@ -1,2 +1,2 @@
-./datasets/facades
-./datasets/facades/*
+*.pth
+*.jpg
