@@ -11,10 +11,10 @@ from base_model import BaseModel
 from . import networks
 
 class Pix2PixModel(BaseModel):
-	def name(self):
-		return 'Pix2PixModel'
+    def name(self):
+        return 'Pix2PixModel'
 
-	def initialize(self, opt):
+    def initialize(self, opt):
         BaseModel.initialize(self, opt)
         self.isTrain = opt.isTrain
 
@@ -25,7 +25,7 @@ class Pix2PixModel(BaseModel):
         self.input_B = self.Tensor(opt.batchSize, opt.output_nc,
                                    opt.fineSize, opt.fineSize)
 
-        # load/define networks
+        # define networks
         self.netG = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf,
                                       opt.which_model_netG, opt.norm, opt.use_dropout, self.gpu_ids)
         if self.isTrain:
@@ -33,6 +33,8 @@ class Pix2PixModel(BaseModel):
             self.netD = networks.define_D(opt.input_nc + opt.output_nc, 
                                           opt.ndf, opt.which_model_netD,
                                           opt.n_layers_D, opt.norm, use_sigmoid, self.gpu_ids)
+        
+        # load network if continue training / in test phase
         if not self.isTrain or opt.continue_train:
             self.load_network(self.netG, 'G', opt.which_epoch)
             if self.isTrain:
@@ -83,12 +85,19 @@ class Pix2PixModel(BaseModel):
     def backward_D(self):
         # Fake
         # stop backprop to the generator by detaching fake_B
+
+        '''
+        fake_AB:     a Variable of size [batch_size, channel * 2, w, h]
+        pred_fake:   a Variable of size [batch_size, 1, 30, 30], 30 is the size of the D output
+        loss_D_fake: a scalar Variable indicating the loss of D
+        '''
         fake_AB = self.fake_AB_pool.query(torch.cat((self.real_A, self.fake_B), 1))
         self.pred_fake = self.netD.forward(fake_AB.detach())
         self.loss_D_fake = self.criterionGAN(self.pred_fake, target_is_real=False)
 
         # Real
-        real_AB = torch.cat((self.real_A, self.real_B), 1)#.detach()
+        # this part of error is allowed to backprop to generator G
+        real_AB = torch.cat((self.real_A, self.real_B), 1)
         self.pred_real = self.netD.forward(real_AB)
         self.loss_D_real = self.criterionGAN(self.pred_real, target_is_real=True)
 
@@ -101,9 +110,9 @@ class Pix2PixModel(BaseModel):
         # First, G(A) should fake the discriminator
         fake_AB = torch.cat((self.real_A, self.fake_B), 1)
         pred_fake = self.netD.forward(fake_AB)
-        self.loss_G_GAN = self.criterionGAN(pred_fake, True)
+        self.loss_G_GAN = self.criterionGAN(pred_fake, True) # fool D using fake data with real label
 
-        # Second, G(A) = B
+        # Second, G(A) should approximate B
         self.loss_G_L1 = self.criterionL1(self.fake_B, self.real_B) * self.opt.lambda_A
 
         self.loss_G = self.loss_G_GAN + self.loss_G_L1
@@ -111,7 +120,7 @@ class Pix2PixModel(BaseModel):
         self.loss_G.backward()
 
     def optimize_parameters(self):
-        self.forward()
+        self.forward() # only do G.forward(), D.forward() is done in backward_D()
 
         self.optimizer_D.zero_grad()
         self.backward_D()
