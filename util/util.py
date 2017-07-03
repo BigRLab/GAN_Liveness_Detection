@@ -6,6 +6,10 @@ import inspect, re
 import numpy as np
 import os
 import collections
+import ntpath
+import scipy.misc
+
+import pdb
 
 # Converts a Tensor into a Numpy array
 # |imtype|: the desired type of the converted numpy array
@@ -21,7 +25,28 @@ def mkdirs(paths):
     else:
         mkdir(paths)
 
-
 def mkdir(path):
     if not os.path.exists(path):
     	os.makedirs(path)
+
+def save_images(visuals, save_path, img_path):
+
+    
+
+    img_name = ntpath.basename(img_path[0])
+    folder_name = img_name[:-4]
+    ext = img_name[-4:]
+    save_folder_path = os.path.join(save_path, folder_name) # path to the folder saving individual images
+    mkdir(save_folder_path)
+
+    # save the individual images
+    for key in visuals.keys():
+        scipy.misc.imsave(os.path.join(save_folder_path, key+ext), visuals[key])
+
+    # combine the images into single result and save
+    comb = np.concatenate((visuals['real_A'],
+                           visuals['fake_B'],
+                           visuals['real_B']), 1)
+    scipy.misc.imsave(os.path.join(save_path, img_name), comb)
+
+    return

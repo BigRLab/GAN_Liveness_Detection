@@ -3,6 +3,7 @@ import os
 from options.test_options import TestOptions
 from data.data_loader import CreateDataLoader
 from models.models import create_model
+from util.util import save_images
 
 import pdb
 
@@ -19,12 +20,18 @@ model = create_model(opt)
 
 # test
 for i, data in enumerate(dataset):
-    if i >= opt.how_many:
+    if i >= opt.ntest:
         break
     
+    print 'Testing progress: {}/{}'.format(i+1, len(dataset))
+
     model.set_input(data)
     model.test() # same implementation as model.forward(), but without gradient backprop
     
     visuals  = model.get_current_visuals() # returns real_A, fake_B, and real_B
     img_path = model.get_image_paths()
+
+    save_path = os.path.join(opt.results_dir, opt.name)
+    save_images(visuals, save_path, img_path)
+
 
