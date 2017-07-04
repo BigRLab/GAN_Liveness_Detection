@@ -1,0 +1,32 @@
+================ Training Loss (Tue Jul  4 09:37:34 2017) ================
+================ Training Loss (Tue Jul  4 09:39:40 2017) ================
+================ Training Loss (Tue Jul  4 09:41:14 2017) ================
+================ Training Loss (Tue Jul  4 09:44:27 2017) ================
+================ Training Loss (Tue Jul  4 09:51:08 2017) ================
+================ Training Loss (Tue Jul  4 09:55:54 2017) ================
+================ Training Loss (Tue Jul  4 10:01:08 2017) ================
+================ Training Loss (Tue Jul  4 10:04:47 2017) ================
+================ Training Loss (Tue Jul  4 10:07:55 2017) ================
+================ Training Loss (Tue Jul  4 10:08:53 2017) ================
+================ Training Loss (Tue Jul  4 10:09:18 2017) ================
+================ Training Loss (Tue Jul  4 10:11:28 2017) ================
+================ Training Loss (Tue Jul  4 10:14:49 2017) ================
+================ Training Loss (Tue Jul  4 10:21:08 2017) ================
+================ Training Loss (Tue Jul  4 10:21:20 2017) ================
+================ Training Loss (Tue Jul  4 10:23:05 2017) ================
+================ Training Loss (Tue Jul  4 10:23:25 2017) ================
+================ Training Loss (Tue Jul  4 10:24:12 2017) ================
+(epoch: 1, iters: 100, time: 0.124) G_GAN: 1.131 G_L1: 20.809 D_real: 0.482 D_fake: 0.591 
+(epoch: 1, iters: 200, time: 0.124) G_GAN: 0.533 G_L1: 8.319 D_real: 0.496 D_fake: 0.424 
+================ Training Loss (Tue Jul  4 10:25:01 2017) ================
+(epoch: 1, iters: 100, time: 0.124) G_GAN: 1.135 G_L1: 16.813 D_real: 0.296 D_fake: 0.294 
+(epoch: 1, iters: 200, time: 0.124) G_GAN: 1.135 G_L1: 12.441 D_real: 0.837 D_fake: 0.237 
+(epoch: 1, iters: 300, time: 0.125) G_GAN: 2.022 G_L1: 11.388 D_real: 0.251 D_fake: 0.072 
+(epoch: 1, iters: 400, time: 0.125) G_GAN: 1.143 G_L1: 8.338 D_real: 0.078 D_fake: 1.801 
+(epoch: 1, iters: 500, time: 0.124) G_GAN: 1.902 G_L1: 26.263 D_real: 0.011 D_fake: 1.506 
+(epoch: 1, iters: 600, time: 0.124) G_GAN: 0.784 G_L1: 12.053 D_real: 0.797 D_fake: 1.019 
+(epoch: 1, iters: 700, time: 0.125) G_GAN: 1.156 G_L1: 15.784 D_real: 0.253 D_fake: 0.145 
+(epoch: 1, iters: 800, time: 0.124) G_GAN: 0.444 G_L1: 15.839 D_real: 0.181 D_fake: 0.262 
+(epoch: 1, iters: 900, time: 0.124) G_GAN: 0.904 G_L1: 10.343 D_real: 1.416 D_fake: 0.042 
+(epoch: 1, iters: 1000, time: 0.126) G_GAN: 1.180 G_L1: 11.007 D_real: 0.436 D_fake: 0.221 
+(epoch: 1, iters: 1100, time: 0.125) G_GAN: 0.653 G_L1: 11.354 D_real: 0.117 D_fake: 0.334 

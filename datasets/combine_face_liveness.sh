@@ -1,0 +1,1 @@
+python ./combine_A_and_B.py --fold_A ./face_liveness/A --fold_B ./face_liveness/B --fold_AB ./face_liveness/AB

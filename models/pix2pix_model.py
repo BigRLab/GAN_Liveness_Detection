@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import os
+import pdb
 from collections import OrderedDict
 from torch.autograd import Variable
 
@@ -19,11 +20,11 @@ class Pix2PixModel(BaseModel):
         self.isTrain = opt.isTrain
 
         # define tensors
-        # TODO: deal with fineSize
+        # self.Tensor is torch.cuda.Tensor if gpu_ids is defined, otherwise use torch.FloatTensor
         self.input_A = self.Tensor(opt.batchSize, opt.input_nc,
-                                   opt.fineSize, opt.fineSize)
+                                   opt.fineSize, opt.fineSize).cuda(device=opt.gpu_ids[0])
         self.input_B = self.Tensor(opt.batchSize, opt.output_nc,
-                                   opt.fineSize, opt.fineSize)
+                                   opt.fineSize, opt.fineSize).cuda(device=opt.gpu_ids[0])
 
         # define networks
         self.netG = networks.define_G(opt.input_nc, opt.output_nc, opt.ngf,
@@ -44,7 +45,7 @@ class Pix2PixModel(BaseModel):
             self.fake_AB_pool = ImagePool(opt.pool_size)
             self.old_lr = opt.lr
             # define loss functions
-            self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor)
+            self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor, gpu_ids=opt.gpu_ids)
             self.criterionL1  = torch.nn.L1Loss()
 
             # initialize optimizers
