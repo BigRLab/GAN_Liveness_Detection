@@ -31,8 +31,6 @@ def mkdir(path):
 
 def save_images(visuals, save_path, img_path):
 
-    
-
     img_name = ntpath.basename(img_path[0])
     folder_name = img_name[:-4]
     ext = img_name[-4:]

@@ -97,7 +97,7 @@ class Pix2PixModel(BaseModel):
         self.loss_D_fake = self.criterionGAN(self.pred_fake, target_is_real=False)
 
         # Real
-        # this part of error is allowed to backprop to generator G
+        # this part of error has nothing to do with G as only real images are considered
         real_AB = torch.cat((self.real_A, self.real_B), 1)
         self.pred_real = self.netD.forward(real_AB)
         self.loss_D_real = self.criterionGAN(self.pred_real, target_is_real=True)
