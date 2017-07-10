@@ -11,6 +11,8 @@ class BaseOptions():
     def initialize(self):
         # data parameters
         self.parser.add_argument('--dataroot', required=True, help='path to images, should have subfolders for images from different domains')
+        self.parser.add_argument('--weight_path', required=True, help='pre-trained weights of VGG_FACE network')
+        self.parser.add_argument('--bias_path', required=True, help='pre-trained bias of VGG_FACE network')
         self.parser.add_argument('--batchSize', type=int, default=1, help='input batch size')
         self.parser.add_argument('--loadSize', type=int, default=286, help='scale images to this size')
         self.parser.add_argument('--fineSize', type=int, default=256, help='then crop to this size')

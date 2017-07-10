@@ -30,3 +30,15 @@
 (epoch: 1, iters: 900, time: 0.124) G_GAN: 0.904 G_L1: 10.343 D_real: 1.416 D_fake: 0.042 
 (epoch: 1, iters: 1000, time: 0.126) G_GAN: 1.180 G_L1: 11.007 D_real: 0.436 D_fake: 0.221 
 (epoch: 1, iters: 1100, time: 0.125) G_GAN: 0.653 G_L1: 11.354 D_real: 0.117 D_fake: 0.334 
+================ Training Loss (Mon Jul 10 15:32:09 2017) ================
+================ Training Loss (Mon Jul 10 15:36:41 2017) ================
+(epoch: 1, iters: 100, time: 0.122) G_GAN: 0.390 G_L1: 9.064 D_real: 0.778 D_fake: 0.236 
+================ Training Loss (Mon Jul 10 15:38:01 2017) ================
+================ Training Loss (Mon Jul 10 15:48:07 2017) ================
+================ Training Loss (Mon Jul 10 15:53:58 2017) ================
+================ Training Loss (Mon Jul 10 16:06:07 2017) ================
+================ Training Loss (Mon Jul 10 16:14:21 2017) ================
+================ Training Loss (Mon Jul 10 16:23:02 2017) ================
+================ Training Loss (Mon Jul 10 16:34:20 2017) ================
+================ Training Loss (Mon Jul 10 17:22:31 2017) ================
+================ Training Loss (Mon Jul 10 17:24:18 2017) ================

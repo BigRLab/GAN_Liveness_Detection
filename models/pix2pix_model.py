@@ -1,7 +1,6 @@
 import numpy as np
 import torch
 import os
-import pdb
 from collections import OrderedDict
 from torch.autograd import Variable
 
@@ -10,6 +9,8 @@ import util.util as util
 from util.image_pool import ImagePool
 from base_model import BaseModel
 from . import networks
+
+import pdb
 
 class Pix2PixModel(BaseModel):
     def name(self):
@@ -45,8 +46,11 @@ class Pix2PixModel(BaseModel):
             self.fake_AB_pool = ImagePool(opt.pool_size)
             self.old_lr = opt.lr
             # define loss functions
-            self.criterionGAN = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor, gpu_ids=opt.gpu_ids)
-            self.criterionL1  = torch.nn.L1Loss()
+            self.criterionGAN  = networks.GANLoss(use_lsgan=not opt.no_lsgan, tensor=self.Tensor, gpu_ids=opt.gpu_ids)
+            self.criterionL1   = torch.nn.L1Loss()
+            
+            if opt.use_prcp:
+                self.criterionPrcp = networks.PrcpLoss(opt.weight_path, opt.bias_path, opt.perceptual_level, tensor=self.Tensor, gpu_ids=opt.gpu_ids)
 
             # initialize optimizers
             self.optimizer_G = torch.optim.Adam(self.netG.parameters(),
@@ -115,6 +119,8 @@ class Pix2PixModel(BaseModel):
 
         # Second, G(A) should approximate B
         self.loss_G_L1 = self.criterionL1(self.fake_B, self.real_B) * self.opt.lambda_A
+
+        pdb.set_trace()
 
         self.loss_G = self.loss_G_GAN + self.loss_G_L1
 

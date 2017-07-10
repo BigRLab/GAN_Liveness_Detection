@@ -1,4 +1,3 @@
-from __future__ import print_function
 import torch
 import numpy as np
 from PIL import Image
@@ -8,6 +7,7 @@ import os
 import collections
 import ntpath
 import scipy.misc
+import pickle
 
 import pdb
 
@@ -48,3 +48,19 @@ def save_images(visuals, save_path, img_path):
     scipy.misc.imsave(os.path.join(save_path, img_name), comb)
 
     return
+
+def load_pretrained_params(weight_path, bias_path):
+    print 'Loading pre-trained VGG_FACE parameters for perceptual loss'
+
+    # load weights
+    with open(weight_path, 'rb') as weight_reader:
+        weight = pickle.load(weight_reader)
+    weight_reader.close()
+
+    # load bias
+    with open(bias_path, 'rb') as bias_reader:
+        bias = pickle.load(bias_reader)
+    bias_reader.close()
+
+    return weight, bias
+

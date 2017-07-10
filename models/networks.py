@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 import numpy as np
+import util.util as util
 
 import pdb
 
@@ -11,6 +12,10 @@ import pdb
 
 # weight initialization
 def weights_init(m):
+    # m is an operation under the network calling apply()
+    # e.g. type(m) returns <class 'torch.nn.modules.conv.Conv2d'>
+    #      m.weight.data returns a torch tensor indicating the weight values
+
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
         m.weight.data.normal_(0.0, 0.02)
@@ -37,14 +42,10 @@ def define_G(input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropo
     if use_gpu:
         assert(torch.cuda.is_available())
 
-    '''
-    Use UNet only
     if which_model_netG == 'resnet_9blocks':
         netG = ResnetGenerator(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=9, gpu_ids=gpu_ids)
     elif which_model_netG == 'resnet_6blocks':
         netG = ResnetGenerator(input_nc, output_nc, ngf, norm_layer=norm_layer, use_dropout=use_dropout, n_blocks=6, gpu_ids=gpu_ids)
-    '''
-
     if which_model_netG == 'unet_128':
         netG = UnetGenerator(input_nc, output_nc, 7, ngf, norm_layer=norm_layer, use_dropout=use_dropout, gpu_ids=gpu_ids)
     elif which_model_netG == 'unet_256':
@@ -54,7 +55,10 @@ def define_G(input_nc, output_nc, ngf, which_model_netG, norm='batch', use_dropo
     
     if use_gpu > 0:
         netG.cuda(device_id=gpu_ids[0])
-    
+
+    # apply the input function to every module and sub-modules
+    # defined at line 135 of file:
+    # https://github.com/pytorch/pytorch/blob/master/torch/nn/modules/module.py
     netG.apply(weights_init)
     
     return netG
@@ -139,6 +143,58 @@ class GANLoss(nn.Module):
                 self.fake_label_var = Variable(fake_tensor, requires_grad=False)
             target_tensor = self.fake_label_var
         return target_tensor
+
+# Define Perceptual loss
+class PrcpLoss(nn.Module):
+    def __init__(self, weight_path, bias_path, perceptual_level='conv5_3', 
+                 tensor=torch.FloatTensor, gpu_ids=[]):
+        super(PrcpLoss, self).__init__()
+        self.Tensor = tensor
+        self.gpu_ids = gpu_ids
+
+        # set up the VGG_FACE network for computing perceptual loss
+        vgg_weights, vgg_bias = util.load_pretrained_params(weight_path, bias_path)
+        self.vgg_face_model = vgg_face_model(vgg_weights, vgg_bias, perceptual_level, tensor=self.Tensor, gpu_ids=self.gpu_ids)
+
+    def __call__(self, )
+
+# Define the VGG_FACE network, forward to compute perceptual loss
+class vgg_face_model(nn.Module):
+    def __init__(self, vgg_weights, vgg_bias, perceptual_level='conv5_3', 
+                 tensor=torch.FloatTensor, gpu_ids=[]):
+        super(vgg_face_model, self).__init__()
+        self.perceptual_level = perceptual_level
+
+        # define specific operations in VGG_FACE that requires parameters
+        for layer_name in vgg_weights.keys():
+            kernel = vgg_weights[layer_name]
+            nc_out, nc_in, k_w, k_h = kernel.shape
+            self.__dict__[layer_name] = nn.Conv2d(nc_in, nc_out, k_w)
+
+            if layer_name == perceptual_level:
+                break
+
+    def forward(self, input):
+        sequence = []
+        pre_stage = 1
+        stage = 0
+        for key in sorted(self.__dict__.keys()):
+            if 'conv' in key:
+                stage = int(key[4])
+                if stage == pre_stage:
+                    sequence += [self.__dict__[key], nn.ReLU]
+                else:
+                    # if this is a start of new stage, a pooling layer should be first applied
+                    sequence += [nn.MaxPool2d(kernel_size=2, stride=2)]
+                    sequence += [self.__dict__[key], nn.ReLU]
+
+            if key == self.perceptual_level:
+                break
+
+        self.model = nn.Sequential(*sequence)
+        return self.model(input)
+
+
 
 # Defines the Unet generator.
 # |num_downs|: number of downsamplings in UNet. For example,
@@ -269,7 +325,6 @@ class NLayerDiscriminator(nn.Module):
         else:
             return self.model(input)
 
-'''
 # Defines the generator that consists of Resnet blocks between a few
 # downsampling/upsampling operations.
 # Code and idea originally from Justin Johnson's architecture.
@@ -318,7 +373,6 @@ class ResnetGenerator(nn.Module):
         else:
             return self.model(input)
 
-
 # Define a resnet block
 class ResnetBlock(nn.Module):
     def __init__(self, dim, padding_type, norm_layer, use_dropout):
@@ -346,4 +400,4 @@ class ResnetBlock(nn.Module):
     def forward(self, x):
         out = x + self.conv_block(x)
         return out
-'''
+

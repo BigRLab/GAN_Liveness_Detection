@@ -1,6 +1,7 @@
 ------------ Options -------------
 batchSize: 1
 beta1: 0.5
+bias_path: ./datasets/vgg_face/bias.pkl
 checkpoints_dir: ./checkpoints
 continue_train: False
 dataroot: ./datasets/face_liveness
@@ -17,6 +18,7 @@ input_nc: 3
 isTrain: True
 lambda_A: 100.0
 lambda_B: 10.0
+lambda_Prcp: 10.0
 loadSize: 286
 lr: 0.0002
 max_dataset_size: inf
@@ -33,6 +35,7 @@ no_html: False
 no_lsgan: True
 norm: instance
 output_nc: 3
+perceptual_level: conv5_3
 phase: train
 pool_size: 50
 print_freq: 100
@@ -41,6 +44,8 @@ save_epoch_freq: 5
 save_latest_freq: 5000
 serial_batches: False
 use_dropout: True
+use_prcp: True
+weight_path: ./datasets/vgg_face/weights.pkl
 which_direction: BtoA
 which_epoch: latest
 which_model_netD: basic

@@ -802,3 +802,6 @@
 ================ Training Loss (Fri Jun 30 15:51:45 2017) ================
 (epoch: 1, iters: 100, time: 0.120) G_GAN: 1.959 G_L1: 23.015 D_real: 0.555 D_fake: 0.375 
 (epoch: 1, iters: 200, time: 0.121) G_GAN: 2.395 G_L1: 34.587 D_real: 0.205 D_fake: 0.128 
+================ Training Loss (Mon Jul 10 14:33:05 2017) ================
+================ Training Loss (Mon Jul 10 14:33:22 2017) ================
+================ Training Loss (Mon Jul 10 15:17:30 2017) ================
