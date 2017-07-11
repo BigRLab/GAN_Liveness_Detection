@@ -117,12 +117,14 @@ class Pix2PixModel(BaseModel):
         pred_fake = self.netD.forward(fake_AB)
         self.loss_G_GAN = self.criterionGAN(pred_fake, True) # fool D using fake data with real label
 
-        # Second, G(A) should approximate B
+        # Second, G(A) should approximate B on pixel level
         self.loss_G_L1 = self.criterionL1(self.fake_B, self.real_B) * self.opt.lambda_A
 
-        pdb.set_trace()
-
         self.loss_G = self.loss_G_GAN + self.loss_G_L1
+
+        if self.opt.useprcp:
+            self.loss_G_Prcp = self.criterionPrcp(self.fake_B, self.real_B) * self.opt.lambda_Prcp
+            self.loss_G += loss_G_Prcp
 
         self.loss_G.backward()
 

@@ -156,7 +156,10 @@ class PrcpLoss(nn.Module):
         vgg_weights, vgg_bias = util.load_pretrained_params(weight_path, bias_path)
         self.vgg_face_model = vgg_face_model(vgg_weights, vgg_bias, perceptual_level, tensor=self.Tensor, gpu_ids=self.gpu_ids)
 
-    def __call__(self, )
+    def __call__(self, fake_B, real_B):
+        # forward to obtain the perceptual
+        pass
+
 
 # Define the VGG_FACE network, forward to compute perceptual loss
 class vgg_face_model(nn.Module):
@@ -174,7 +177,11 @@ class vgg_face_model(nn.Module):
             if layer_name == perceptual_level:
                 break
 
-    def forward(self, input):
+        self.makenet()
+
+    def makenet(self):
+        print "Working on constructing the VGG_FACE network"
+
         sequence = []
         pre_stage = 1
         stage = 0
@@ -182,18 +189,20 @@ class vgg_face_model(nn.Module):
             if 'conv' in key:
                 stage = int(key[4])
                 if stage == pre_stage:
-                    sequence += [self.__dict__[key], nn.ReLU]
+                    sequence += [self.__dict__[key], nn.ReLU()]
                 else:
                     # if this is a start of new stage, a pooling layer should be first applied
                     sequence += [nn.MaxPool2d(kernel_size=2, stride=2)]
-                    sequence += [self.__dict__[key], nn.ReLU]
+                    sequence += [self.__dict__[key], nn.ReLU()]
 
             if key == self.perceptual_level:
                 break
 
         self.model = nn.Sequential(*sequence)
-        return self.model(input)
+        print_network(self.model)
 
+    def forward(self, input):
+        return self.model(input)
 
 
 # Defines the Unet generator.
