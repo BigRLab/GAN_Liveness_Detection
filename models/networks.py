@@ -158,9 +158,11 @@ class PrcpLoss(nn.Module):
 
     def __call__(self, fake_B, real_B):
         # forward to obtain the perceptual
-        fake_prcp_feat = self.vgg_face_model.forward(fake_B)
-        real_prcp_feat = self.vgg_face_model.forward(real_B)
+
         pdb.set_trace()
+
+        fake_prcp_feat = Variable(self.vgg_face_model.forward(fake_B), requires_grad=False)
+        real_prcp_feat = Variable(self.vgg_face_model.forward(real_B), requires_grad=False)
         loss = nn.MSELoss()
         return loss(fake_prcp_feat, real_prcp_feat)
 
@@ -171,12 +173,18 @@ class vgg_face_model(nn.Module):
                  tensor=torch.FloatTensor, gpu_ids=[]):
         super(vgg_face_model, self).__init__()
         self.perceptual_level = perceptual_level
+        self.gpu_ids = gpu_ids
+        self.Tensor  = tensor
 
         # define specific operations in VGG_FACE that requires parameters
         for layer_name in vgg_weights.keys():
             kernel = vgg_weights[layer_name]
             nc_out, nc_in, k_w, k_h = kernel.shape
+
             self.__dict__[layer_name] = nn.Conv2d(nc_in, nc_out, k_w)
+            self.__dict__[layer_name].weight.data = torch.from_numpy(vgg_weights[layer_name])
+            self.__dict__[layer_name].bias.data   = torch.from_numpy(vgg_bias[layer_name])
+            
 
             if layer_name == perceptual_level:
                 break
@@ -198,11 +206,12 @@ class vgg_face_model(nn.Module):
                     # if this is a start of new stage, a pooling layer should be first applied
                     sequence += [nn.MaxPool2d(kernel_size=2, stride=2)]
                     sequence += [self.__dict__[key], nn.ReLU(True)]
+                    pre_stage = stage
 
             if key == self.perceptual_level:
                 break
 
-        self.model = nn.Sequential(*sequence)
+        self.model = nn.Sequential(*sequence).cuda(device_id=self.gpu_ids[0])
         print_network(self.model)
 
     def forward(self, input):

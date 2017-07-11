@@ -122,7 +122,7 @@ class Pix2PixModel(BaseModel):
 
         self.loss_G = self.loss_G_GAN + self.loss_G_L1
 
-        if self.opt.useprcp:
+        if self.opt.use_prcp:
             self.loss_G_Prcp = self.criterionPrcp(self.fake_B, self.real_B) * self.opt.lambda_Prcp
             self.loss_G += loss_G_Prcp
 
