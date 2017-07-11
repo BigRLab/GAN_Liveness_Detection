@@ -158,7 +158,11 @@ class PrcpLoss(nn.Module):
 
     def __call__(self, fake_B, real_B):
         # forward to obtain the perceptual
-        pass
+        fake_prcp_feat = self.vgg_face_model.forward(fake_B)
+        real_prcp_feat = self.vgg_face_model.forward(real_B)
+        pdb.set_trace()
+        loss = nn.MSELoss()
+        return loss(fake_prcp_feat, real_prcp_feat)
 
 
 # Define the VGG_FACE network, forward to compute perceptual loss
@@ -189,11 +193,11 @@ class vgg_face_model(nn.Module):
             if 'conv' in key:
                 stage = int(key[4])
                 if stage == pre_stage:
-                    sequence += [self.__dict__[key], nn.ReLU()]
+                    sequence += [self.__dict__[key], nn.ReLU(True)]
                 else:
                     # if this is a start of new stage, a pooling layer should be first applied
                     sequence += [nn.MaxPool2d(kernel_size=2, stride=2)]
-                    sequence += [self.__dict__[key], nn.ReLU()]
+                    sequence += [self.__dict__[key], nn.ReLU(True)]
 
             if key == self.perceptual_level:
                 break
