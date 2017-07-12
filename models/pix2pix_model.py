@@ -124,7 +124,9 @@ class Pix2PixModel(BaseModel):
 
         if self.opt.use_prcp:
             self.loss_G_Prcp = self.criterionPrcp(self.fake_B, self.real_B) * self.opt.lambda_Prcp
-            self.loss_G += loss_G_Prcp
+            self.loss_G += self.loss_G_Prcp
+
+        pdb.set_trace()
 
         self.loss_G.backward()
 

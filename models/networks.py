@@ -159,10 +159,9 @@ class PrcpLoss(nn.Module):
     def __call__(self, fake_B, real_B):
         # forward to obtain the perceptual
 
-        pdb.set_trace()
-
-        fake_prcp_feat = Variable(self.vgg_face_model.forward(fake_B), requires_grad=False)
-        real_prcp_feat = Variable(self.vgg_face_model.forward(real_B), requires_grad=False)
+        fake_prcp_feat = self.vgg_face_model.forward(fake_B)
+        real_prcp_feat = self.vgg_face_model.forward(real_B)
+        
         loss = nn.MSELoss()
         return loss(fake_prcp_feat, real_prcp_feat)
 
@@ -182,10 +181,9 @@ class vgg_face_model(nn.Module):
             nc_out, nc_in, k_w, k_h = kernel.shape
 
             self.__dict__[layer_name] = nn.Conv2d(nc_in, nc_out, k_w)
-            self.__dict__[layer_name].weight.data = torch.from_numpy(vgg_weights[layer_name])
-            self.__dict__[layer_name].bias.data   = torch.from_numpy(vgg_bias[layer_name])
+            self.__dict__[layer_name].weight.data.copy_(torch.from_numpy(vgg_weights[layer_name]))
+            self.__dict__[layer_name].bias.data.copy_(torch.from_numpy(vgg_bias[layer_name]))
             
-
             if layer_name == perceptual_level:
                 break
 
@@ -212,10 +210,15 @@ class vgg_face_model(nn.Module):
                 break
 
         self.model = nn.Sequential(*sequence).cuda(device_id=self.gpu_ids[0])
+
+        # fix the model parameters
+        for param in self.model.parameters():
+            param.requires_grad = False
+
         print_network(self.model)
 
     def forward(self, input):
-        return self.model(input)
+        return self.model.forward(input)
 
 
 # Defines the Unet generator.
