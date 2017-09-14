@@ -35,7 +35,7 @@ no_html: False
 no_lsgan: True
 norm: instance
 output_nc: 3
-perceptual_level: conv5_3
+perceptual_level: conv4_3
 phase: train
 pool_size: 50
 print_freq: 100
