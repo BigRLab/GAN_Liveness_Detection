@@ -2,7 +2,11 @@
 def create_model(opt):
     model = None
     
-    if opt.model == 'pix2pix':
+    if opt.model == 'cycle_gan':
+        assert(opt.dataset_mode == 'unaligned')
+        from .cycle_gan_model import CycleGANModel
+        model = CycleGANModel()
+    elif opt.model == 'pix2pix':
         assert(opt.dataset_mode == 'aligned')
         from .pix2pix_model import Pix2PixModel
         model = Pix2PixModel()

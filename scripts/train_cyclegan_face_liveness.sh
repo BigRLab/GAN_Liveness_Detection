@@ -1,0 +1,1 @@
+python ../train.py --gpu_ids '5' --dataroot ./datasets/face_liveness --name face_liveness_cyclegan --model cyclegan --which_model_netG unet_256 --which_direction AtoB --lambda_A 100 --dataset_mode unaligned --no_lsgan --use_dropout --no_html

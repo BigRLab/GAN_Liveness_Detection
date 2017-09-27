@@ -7,7 +7,7 @@ from models.models import create_model
 from util.logger import Logger 
 
 data_loader = CreateDataLoader(opt)
-dataset = data_loader.load_data()
+dataset = data_loader.load_data() # dataset is actually a torch.utils.data.DataLoader object
 dataset_size = len(data_loader)
 print('#training images = %d' % dataset_size)
 
